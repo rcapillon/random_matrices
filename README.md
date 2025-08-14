@@ -29,3 +29,6 @@ Choose and import the desired generators from generators.py, e.g.:
 from random_matrices.generators import SE_0_plus
 ```
 Users are invited to look up the necessary arguments to generate samples of a random matrix.
+
+## Bibliography
+[1] C. Soize, Uncertainty Quantification, 2017, https://doi.org/10.1007/978-3-319-54339-0
