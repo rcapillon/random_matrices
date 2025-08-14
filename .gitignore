@@ -1,4 +1,5 @@
 # Exclude some folders
+biblio/
 # Eclude some files
 TODO.txt
 *.png
