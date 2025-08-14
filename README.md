@@ -10,6 +10,7 @@ and is still undergoing debugging and development.
 - SG_eps_+: positive-definite matrices with identity matrix as mean value and with a positive lower bound
 - SE_0_+: positive-definite matrices with given mean value
 - SE_+0: positive semidefinite matrices with given mean value
+- SE_rect: rectangular matrices with given mean value
 
 ## Installation
 First, clone the repository in the folder of your choice using:
