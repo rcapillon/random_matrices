@@ -89,13 +89,11 @@ def SE_plus0(dispersion_coeff, mean_mat, n_samples, eps=1e-3, tol=1e-9):
     eigvals = eigvals[eigvals >= tol]
     mat_R = np.dot(eigvects, np.diag(np.sqrt(eigvals)))
     n = eigvals.size
-    delta_G_eps = (dispersion_coeff *
-                   np.sqrt((n + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
-    mats_G_eps = SG_eps_plus(n, delta_G_eps, n_samples, eps)
+    mats_G_eps = SG_eps_plus(n, dispersion_coeff, n_samples, eps)
     N = mean_mat.shape[0]
     mats_SE_plus0 = np.zeros((N, N, n_samples))
     for i in range(n_samples):
-        mats_SE_plus0[:, :, i] = np.dot(mat_R.T, np.dot(mats_G_eps[:, :, i], mat_R))
+        mats_SE_plus0[:, :, i] = np.dot(mat_R, np.dot(mats_G_eps[:, :, i], mat_R.T))
 
     return mats_SE_plus0
 
@@ -110,9 +108,7 @@ def SE_rect(dispersion_coeff, mean_mat, n_samples, eps=1e-3):
     mat_L = np.dot(np.diag(np.sqrt(S)), Vh)
     M = mat_U.shape[0]
     N = mat_L.shape[0]
-    delta_G_eps = (dispersion_coeff *
-                   np.sqrt((N + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
-    mats_G_eps = SG_eps_plus(N, delta_G_eps, n_samples, eps)
+    mats_G_eps = SG_eps_plus(N, dispersion_coeff, n_samples, eps)
     mats_SE_rect = np.zeros((M, N, n_samples))
     for i in range(n_samples):
         mats_SE_rect[:, :, i] = np.dot(mat_U, np.dot(mat_L.T, np.dot(mats_G_eps[:, :, i], mat_L)))
