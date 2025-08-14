@@ -1,0 +1,4 @@
+# Exclude some folders
+# Eclude some files
+TODO.txt
+*.png

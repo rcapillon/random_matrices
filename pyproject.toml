@@ -1,0 +1,27 @@
+[build-system]
+requires = [
+    "setuptools>=80.9.0"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "random_matrices"
+version = "0.1"
+authors = [
+    { name = "Rémi Capillon" },
+]
+description = "Generators for several types of random matrices in Python"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy >= 2.3.2",
+    "scipy >= 1.16.1"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/rcapillon/random_matrices"
