@@ -42,7 +42,19 @@ def SG_0_plus(N, dispersion_coeff, n_samples):
             else:
                 component_samples = sigma * norm.rvs(size=n_samples)
                 mats_L[k, j, :] = component_samples
-    mats_G0 = np.tensordot(np.transpose(mats_L, axes=(0, 1)), mats_L, axes=(1, 0))
+    mats_G_0 = np.tensordot(np.transpose(mats_L, axes=(0, 1)), mats_L, axes=(1, 0))
 
-    return mats_G0
+    return mats_G_0
 
+
+def SG_eps_plus(N, dispersion_coeff, n_samples, eps=1e-3):
+    """
+    Generator for random matrices belonging to the SG_eps_+ ensemble
+    (positive-definite matrices with identity matrix as mean value and with a positive lower bound)
+    """
+    delta_G_0 = (1 + eps) * dispersion_coeff
+    mats_G_0 = SG_0_plus(N, delta_G_0, n_samples)
+    mats_I = np.tile(np.eye(N)[:, :, np.newaxis], (1, 1, n_samples))
+    mats_G_eps = (mats_G_0 + eps * mats_I) / (1 + eps)
+
+    return mats_G_eps
