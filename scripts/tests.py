@@ -12,11 +12,11 @@ def calculate_dispersion_coeff(mats):
     """
     Calculates the dispersion coefficient for given samples of a random matrix
     """
-    mean_mat = np.mean(mats, axis=-1)
-    norm_mean_mat = np.linalg.norm(mean_mat)
+    mean_matrix = np.mean(mats, axis=-1)
+    norm_mean_mat = np.linalg.norm(mean_matrix)
     numerator = 0
     for i in range(mats.shape[-1]):
-        numerator += np.linalg.norm(mats[:, :, i] - mean_mat) ** 2
+        numerator += np.linalg.norm(mats[:, :, i] - mean_matrix) ** 2
     numerator /= mats.shape[-1]
     dispersion_coeff = np.sqrt(numerator / norm_mean_mat ** 2)
 
@@ -26,7 +26,7 @@ def calculate_dispersion_coeff(mats):
 if __name__ == '__main__':
     N = 5
     delta = 0.3
-    n_samples = 1000
+    n_samples = 10000
 
     mats_GOE = gen.GOE(N, delta, n_samples)
     mean_mat_GOE = np.mean(mats_GOE, axis=-1)
