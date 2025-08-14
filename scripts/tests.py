@@ -85,8 +85,8 @@ if __name__ == '__main__':
     # print(mean_mat_SE_plus0)
     print('\n')
 
-    mean_mat = np.array([[1, 2], [3, 4], [5, 6]])
-    mats_SE_rect = gen.SE_rect(delta, mean_mat, n_samples, eps=1e-3)
+    mean_mat = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+    mats_SE_rect = gen.SE_rect(delta, mean_mat, n_samples, eps=1e-9)
     mean_mat_SE_rect = np.mean(mats_SE_rect, axis=-1)
     delta_calc_SE_rect = calculate_dispersion_coeff(mats_SE_rect)
     print('SE_rect: prescribed delta')
