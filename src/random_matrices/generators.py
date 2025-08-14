@@ -101,7 +101,8 @@ def SE_plus0(dispersion_coeff, mean_mat, n_samples, eps=1e-3, tol=1e-9):
 def SE_rect(dispersion_coeff, mean_mat, n_samples, eps=1e-3):
     """
     Generator for random matrices belonging to the SE_rect ensemble
-    (rectangular matrices with given mean value)
+    (rectangular matrices with given mean value). mean_mat must have less columns than rows.
+    If the opposite is needed, generate the transpose matrix this way and transpose the results after.
     """
     U, S, Vh = np.linalg.svd(mean_mat, full_matrices=False)
     mat_U = np.dot(U, Vh)
