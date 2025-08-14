@@ -80,13 +80,14 @@ def SE_plus0(dispersion_coeff, mean_mat, n_samples, eps=1e-3, tol=1e-9):
     Generator for random matrices belonging to the SE_plus0 ensemble
     (positive semidefinite matrices with given mean value)
     """
-    N = mean_mat.shape[0]
     eigvals, eigvects = np.linalg.eig(mean_mat)
     eigvects = eigvects[:, eigvals >= tol]
     eigvals = eigvals[eigvals >= tol]
     mat_R = np.dot(eigvects, np.diag(np.sqrt(eigvals)))
     n = eigvals.size
-    mats_G_eps = SG_eps_plus(n, dispersion_coeff, n_samples, eps)
+    delta_G_eps = (dispersion_coeff *
+                   np.sqrt((n + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
+    mats_G_eps = SG_eps_plus(n, delta_G_eps, n_samples, eps)
     mats_SE_plus0 = np.tensordot(mat_R.T, np.tensordot(mats_G_eps, mat_R, axes=(1, 0)), axes=(1, 0))
 
     return mats_SE_plus0
