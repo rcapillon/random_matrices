@@ -91,3 +91,21 @@ def SE_plus0(dispersion_coeff, mean_mat, n_samples, eps=1e-3, tol=1e-9):
     mats_SE_plus0 = np.tensordot(mat_R.T, np.tensordot(mats_G_eps, mat_R, axes=(1, 0)), axes=(1, 0))
 
     return mats_SE_plus0
+
+
+def SE_rect(dispersion_coeff, mean_mat, n_samples, eps=1e-3):
+    """
+    Generator for random matrices belonging to the SE_rect ensemble
+    (rectangular matrices with given mean value)
+    """
+    U, S, Vh = np.linalg.svd(mean_mat, full_matrices=False)
+    mat_U = np.dot(U, Vh)
+    mat_L = np.dot(np.diag(np.sqrt(S)), Vh)
+    N = mat_L.shape[0]
+    delta_G_eps = (dispersion_coeff *
+                   np.sqrt((N + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
+    mats_G_eps = SG_eps_plus(N, delta_G_eps, n_samples, eps)
+    mats_T = np.tensordot(mat_L.T, np.tensordot(mats_G_eps, mat_L, axes=(1, 0)), axes=(1, 0))
+    mats_SE_rect = np.tensordot(mat_U, mats_T, axes=(1, 0))
+
+    return mats_SE_rect
