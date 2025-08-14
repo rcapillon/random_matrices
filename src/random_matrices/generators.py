@@ -42,7 +42,9 @@ def SG_0_plus(N, dispersion_coeff, n_samples):
             else:
                 component_samples = sigma * norm.rvs(size=n_samples)
                 mats_L[k, j, :] = component_samples
-    mats_G_0 = np.tensordot(np.transpose(mats_L, axes=(0, 1)), mats_L, axes=(1, 0))
+    mats_G_0 = np.zeros((N, N, n_samples))
+    for i in range(n_samples):
+        mats_G_0[:, :, i] = np.dot(np.transpose(mats_L[:, :, i]), mats_L[:, :, i])
 
     return mats_G_0
 
@@ -70,7 +72,9 @@ def SE_0_plus(dispersion_coeff, mean_mat, n_samples):
     delta_G_0 = (dispersion_coeff *
                  np.sqrt((N + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
     mats_G_0 = SG_0_plus(N, delta_G_0, n_samples)
-    mats_SE_0_plus = np.tensordot(L_upper.T, np.tensordot(mats_G_0, L_upper, axes=(1, 0)), axes=(1, 0))
+    mats_SE_0_plus = np.zeros((N, N, n_samples))
+    for i in range(n_samples):
+        mats_SE_0_plus[:, :, i] = np.dot(L_upper.T, np.dot(mats_G_0[:, :, i], L_upper))
 
     return mats_SE_0_plus
 
@@ -88,7 +92,10 @@ def SE_plus0(dispersion_coeff, mean_mat, n_samples, eps=1e-3, tol=1e-9):
     delta_G_eps = (dispersion_coeff *
                    np.sqrt((n + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
     mats_G_eps = SG_eps_plus(n, delta_G_eps, n_samples, eps)
-    mats_SE_plus0 = np.tensordot(mat_R.T, np.tensordot(mats_G_eps, mat_R, axes=(1, 0)), axes=(1, 0))
+    N = mean_mat.shape[0]
+    mats_SE_plus0 = np.zeros((N, N, n_samples))
+    for i in range(n_samples):
+        mats_SE_plus0[:, :, i] = np.dot(mat_R.T, np.dot(mats_G_eps[:, :, i], mat_R))
 
     return mats_SE_plus0
 
@@ -101,11 +108,13 @@ def SE_rect(dispersion_coeff, mean_mat, n_samples, eps=1e-3):
     U, S, Vh = np.linalg.svd(mean_mat, full_matrices=False)
     mat_U = np.dot(U, Vh)
     mat_L = np.dot(np.diag(np.sqrt(S)), Vh)
+    M = mat_U.shape[0]
     N = mat_L.shape[0]
     delta_G_eps = (dispersion_coeff *
                    np.sqrt((N + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
     mats_G_eps = SG_eps_plus(N, delta_G_eps, n_samples, eps)
-    mats_T = np.tensordot(mat_L.T, np.tensordot(mats_G_eps, mat_L, axes=(1, 0)), axes=(1, 0))
-    mats_SE_rect = np.tensordot(mat_U, mats_T, axes=(1, 0))
+    mats_SE_rect = np.zeros((M, N, n_samples))
+    for i in range(n_samples):
+        mats_SE_rect[:, :, i] = np.dot(mat_U, np.dot(mat_L.T, np.dot(mats_G_eps[:, :, i], mat_L)))
 
     return mats_SE_rect
