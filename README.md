@@ -1,6 +1,9 @@
 # random_matrices
 Generators for several types of random matrices in Python.
 
+**Important note**: This repository has just recently been made public 
+and is still undergoing debugging and development.
+
 ## Available ensembles of random matrices
 - GOE: Gaussian Orthogonal Ensemble
 - SG_0_+: positive-definite matrices with the identity matrix as mean value
