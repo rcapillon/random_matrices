@@ -60,11 +60,12 @@ def SG_eps_plus(N, dispersion_coeff, n_samples, eps=1e-3):
     return mats_G_eps
 
 
-def SE_0_plus(N, dispersion_coeff, mean_mat, n_samples):
+def SE_0_plus(dispersion_coeff, mean_mat, n_samples):
     """
     Generator for random matrices belonging to the SE_0_plus ensemble
     (positive-definite matrices with given mean value)
     """
+    N = mean_mat.shape[0]
     L_upper = np.linalg.cholesky(mean_mat, upper=True)
     delta_G_0 = (dispersion_coeff *
                  np.sqrt((N + 1) / (1 + (np.linalg.trace(mean_mat) ** 2) / np.linalg.norm(mean_mat) ** 2)))
@@ -72,3 +73,20 @@ def SE_0_plus(N, dispersion_coeff, mean_mat, n_samples):
     mats_SE_0_plus = np.tensordot(L_upper.T, np.tensordot(mats_G_0, L_upper, axes=(1, 0)), axes=(1, 0))
 
     return mats_SE_0_plus
+
+
+def SE_plus0(dispersion_coeff, mean_mat, n_samples, eps=1e-3, tol=1e-9):
+    """
+    Generator for random matrices belonging to the SE_plus0 ensemble
+    (positive semidefinite matrices with given mean value)
+    """
+    N = mean_mat.shape[0]
+    eigvals, eigvects = np.linalg.eig(mean_mat)
+    eigvects = eigvects[:, eigvals >= tol]
+    eigvals = eigvals[eigvals >= tol]
+    mat_R = np.dot(eigvects, np.diag(np.sqrt(eigvals)))
+    n = eigvals.size
+    mats_G_eps = SG_eps_plus(n, dispersion_coeff, n_samples, eps)
+    mats_SE_plus0 = np.tensordot(mat_R.T, np.tensordot(mats_G_eps, mat_R, axes=(1, 0)), axes=(1, 0))
+
+    return mats_SE_plus0
