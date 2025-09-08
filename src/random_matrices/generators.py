@@ -25,7 +25,7 @@ def GOE(N, dispersion_coeff, n_samples):
 def SG_0_plus(N, dispersion_coeff, n_samples):
     """
     Generator for random matrices belonging to the SG_0_+ ensemble
-    (positive-definite matrices with identity matrix as mean value)
+    (positive-definite symmetric matrices with identity matrix as mean value)
     """
     if dispersion_coeff <= 0 or dispersion_coeff >= np.sqrt((N + 1) / (N + 5)):
         raise ValueError('Dispersion coefficient should be greater than 0 '
@@ -52,7 +52,7 @@ def SG_0_plus(N, dispersion_coeff, n_samples):
 def SG_eps_plus(N, dispersion_coeff, n_samples, eps=1e-3):
     """
     Generator for random matrices belonging to the SG_eps_+ ensemble
-    (positive-definite matrices with identity matrix as mean value and with a positive lower bound)
+    (positive-definite symmetric matrices with identity matrix as mean value and with a positive lower bound)
     """
     delta_G_0 = (1 + eps) * dispersion_coeff
     mats_G_0 = SG_0_plus(N, delta_G_0, n_samples)
@@ -65,7 +65,7 @@ def SG_eps_plus(N, dispersion_coeff, n_samples, eps=1e-3):
 def SE_0_plus(dispersion_coeff, mean_mat, n_samples):
     """
     Generator for random matrices belonging to the SE_0_plus ensemble
-    (positive-definite matrices with given mean value)
+    (positive-definite symmetric matrices with given mean value)
     """
     N = mean_mat.shape[0]
     L_upper = np.linalg.cholesky(mean_mat, upper=True)
@@ -82,7 +82,7 @@ def SE_0_plus(dispersion_coeff, mean_mat, n_samples):
 def SE_plus0(dispersion_coeff, mean_mat, n_samples, eps=1e-3, tol=1e-9):
     """
     Generator for random matrices belonging to the SE_plus0 ensemble
-    (positive semidefinite matrices with given mean value)
+    (positive semidefinite symmetric matrices with given mean value)
     """
     eigvals, eigvects = np.linalg.eig(mean_mat)
     eigvects = eigvects[:, eigvals >= tol]
